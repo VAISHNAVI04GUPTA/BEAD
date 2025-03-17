@@ -140,35 +140,42 @@ def get_arguments():
 class Config:
     """Defines a configuration dataclass"""
 
+    workspace_name: str
+    project_name: str
     file_type: str
     parallel_workers: int
+    chunk_size: int
     num_jets: int
     num_constits: int
     latent_space_size: int
     normalizations: str
     invert_normalizations: bool
     train_size: float
-    epochs: int
-    early_stopping: bool
-    early_stoppin_patience: int
-    lr_scheduler: bool
-    lr_scheduler_patience: int
-
-    min_delta: int
     model_name: str
     input_level: str
     input_features: str
     model_init: str
     loss_function: str
-    reg_param: float
+    optimizer: str
+    epochs: int
     lr: float
     batch_size: int
-    test_size: float
+    early_stopping: bool
+    early_stoppin_patience: int
+    lr_scheduler: bool
+    lr_scheduler_patience: int
+    latent_space_plot_style: str
+    subsample_plot: bool
+
+    min_delta: int
+    reg_param: float
     intermittent_model_saving: bool
-    separate_model_saving: bool
     intermittent_saving_patience: int
     activation_extraction: bool
     deterministic_algorithm: bool
+    separate_model_saving: bool
+    subsample_size: int
+
 
 
 def create_default_config(workspace_name: str, project_name: str) -> str:
@@ -187,7 +194,8 @@ def set_config(c):
     c.workspace_name               = "{workspace_name}"
     c.project_name                 = "{project_name}"
     c.file_type                    = "h5"
-    c.parallel_workers             = 4
+    c.parallel_workers             = 8
+    c.chunk_size                   = 10000
     c.num_jets                     = 3
     c.num_constits                 = 15
     c.latent_space_size            = 15
@@ -206,6 +214,7 @@ def set_config(c):
     c.early_stopping               = True
     c.lr_scheduler                 = True
     c.latent_space_plot_style      = "trimap"
+    c.subsample_plot               = False
 
 
 
@@ -221,6 +230,7 @@ def set_config(c):
     c.activation_extraction        = False
     c.deterministic_algorithm      = False
     c.separate_model_saving        = False
+    c.subsample_size               = 300000
 
 """
 
@@ -488,21 +498,6 @@ def run_training(paths, config, verbose: bool = False):
 
     # Split Generator labels from val data
     data_val, gen_labels_val = helper.data_label_split(data_val)
-
-    # Save val generator labels
-    gen_label_events, gen_label_jets, gen_label_constituents = gen_labels_val
-    np.save(
-        os.path.join(labels_path, "val_gen_label_event.npy"),
-        gen_label_events.detach().cpu().numpy(),
-    )
-    np.save(
-        os.path.join(labels_path, "val_gen_label_jet.npy"),
-        gen_label_jets.detach().cpu().numpy(),
-    )
-    np.save(
-        os.path.join(labels_path, "val_gen_label_constituent.npy"),
-        gen_label_constituents.detach().cpu().numpy(),
-    )
 
     data = data_train + data_val
     gen_labels = gen_labels_train + gen_labels_val
