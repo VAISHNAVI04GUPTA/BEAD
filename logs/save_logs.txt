@@ -1,0 +1,5 @@
+[INFO] Epoch 100: Model saved at ./checkpoints/model_epoch_100.pth  
+[INFO] Epoch 200: Model saved at ./checkpoints/model_epoch_200.pth  
+[INFO] Epoch 300: Model saved at ./checkpoints/model_epoch_300.pth  
+[INFO] Epoch 400: Model saved at ./checkpoints/model_epoch_400.pth  
+[INFO] Epoch 500: Model saved at ./checkpoints/model_epoch_500.pth  

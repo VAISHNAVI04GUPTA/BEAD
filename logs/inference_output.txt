@@ -1,0 +1,4 @@
+[INFO] Running anomaly detection on sample: monotop_200_A  
+[INFO] Anomalies detected: 45  
+[INFO] Mean anomaly score: 0.75  
+[INFO] Max anomaly score: 0.92  
